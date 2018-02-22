@@ -16,17 +16,17 @@ public abstract class ApiMultiThread implements ApiThread {
     for (int i = 0; i < count; i++) {
       ApiSingleThread t = new ApiSingleThread(fps, (int) Math.round(fps / count * 1000 * i)) {
         public void onThreadExecute() throws InterruptedException {
-          process();
+          ApiMultiThread.this.onThreadExecute();
         }
 
         @Override
         public void onKeepUp() {
-          processKeepUp();
+          ApiMultiThread.this.onKeepUp();
         }
 
         @Override
         public void onInterrupt() {
-          processInterrupt();
+          ApiMultiThread.this.onInterrupt();
         }
 
         @Override
@@ -51,7 +51,7 @@ public abstract class ApiMultiThread implements ApiThread {
 
   @Override
   public void pause() {
-    processPause();
+    onPause();
     for (ApiSingleThread thread : threads) {
       thread.pause();
     }
@@ -59,7 +59,7 @@ public abstract class ApiMultiThread implements ApiThread {
 
   @Override
   public void resume() {
-    processResume();
+    onResume();
     for (ApiSingleThread thread : threads) {
       thread.resume();
     }
@@ -67,7 +67,7 @@ public abstract class ApiMultiThread implements ApiThread {
 
   @Override
   public void stop() {
-    processStop();
+    onStop();
     for (ApiSingleThread thread : threads) {
       thread.stop();
     }
@@ -75,37 +75,9 @@ public abstract class ApiMultiThread implements ApiThread {
 
   @Override
   public void start() {
-    processStart();
+    onStart();
     for (ApiSingleThread thread : threads) {
       thread.start();
     }
-  }
-
-  private void process() throws InterruptedException {
-    onThreadExecute();
-  }
-
-  private void processKeepUp() {
-    onKeepUp();
-  }
-
-  private void processInterrupt() {
-    onInterrupt();
-  }
-
-  private void processStart() {
-    onStart();
-  }
-
-  private void processPause() {
-    onPause();
-  }
-
-  private void processResume() {
-    onResume();
-  }
-
-  private void processStop() {
-    onStop();
   }
 }
