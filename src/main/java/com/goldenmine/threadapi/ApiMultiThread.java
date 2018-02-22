@@ -1,6 +1,7 @@
 package com.goldenmine.threadapi;
 
 import com.goldenmine.threadapi.handler.ApiThreadHandler;
+import com.goldenmine.threadapi.handler.ApiThreadHandlerBuilder;
 import com.goldenmine.threadapi.unit.FpsTimeUnit;
 
 import java.util.ArrayList;
@@ -17,38 +18,7 @@ public final class ApiMultiThread implements ApiThread {
   public ApiMultiThread(final double fps, final int count, ApiThreadHandler handler) {
     this.handler = handler;
     for (int i = 0; i < count; i++) {
-      ApiSingleThread t = new ApiSingleThread(fps, (int) Math.round(fps / count * 1000 * i), new ApiThreadHandler() {
-        public void onThreadExecute() throws InterruptedException {
-          handler.onThreadExecute();
-        }
-
-        @Override
-        public void onKeepUp() {
-          handler.onKeepUp();
-        }
-
-        @Override
-        public void onInterrupt() {
-          handler.onInterrupt();
-        }
-
-        @Override
-        public void onStart() {
-        }
-
-        @Override
-        public void onPause() {
-        }
-
-        @Override
-        public void onResume() {
-        }
-
-        @Override
-        public void onStop() {
-        }
-      });
-      threads.add(t);
+      threads.add(new ApiSingleThread(fps, (int) Math.round(fps / count * 1000 * i), new ApiThreadHandlerBuilder().onThreadExecute(handler::onThreadExecute).onKeepUp(handler::onKeepUp).onInterrupt(handler::onInterrupt).build()));
     }
   }
 

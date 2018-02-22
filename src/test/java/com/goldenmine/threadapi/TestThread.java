@@ -1,56 +1,22 @@
 package com.goldenmine.threadapi;
 
-import com.goldenmine.threadapi.handler.ApiThreadHandler;
+import com.goldenmine.threadapi.handler.ApiThreadHandlerBuilder;
 import com.goldenmine.threadapi.unit.FpsTimeUnit;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class TestThread {
   public static void main(String[] args) {
-    ApiThread apiThread = new ApiSingleThread(FpsTimeUnit.SECOND, 1, new ApiThreadHandler() {
-      long first = -1;
+    AtomicReference<Long> first = new AtomicReference<>(-1L);
+    AtomicReference<Integer> time = new AtomicReference<>(0);
 
-      int time;
-
-      @Override
-      public void onThreadExecute() throws InterruptedException {
-        Delay.sleep(10);
-        if (first == -1) {
-          first = System.currentTimeMillis();
-        }
-        //System.out.println(System.currentTimeMillis() - first);
-
-        System.out.println(++time + "초가 지났습니다");
+    ApiThread apiThread = new ApiSingleThread(FpsTimeUnit.SECOND, 1, new ApiThreadHandlerBuilder().onThreadExecute(() -> {
+      Delay.sleep(10);
+      if (first.get() == -1) {
+        first.set(System.currentTimeMillis());
       }
-
-      @Override
-      public void onKeepUp() {
-
-      }
-
-      @Override
-      public void onInterrupt() {
-
-      }
-
-      @Override
-      public void onStart() {
-
-      }
-
-      @Override
-      public void onPause() {
-
-      }
-
-      @Override
-      public void onResume() {
-
-      }
-
-      @Override
-      public void onStop() {
-
-      }
-    });
+      System.out.println(time.updateAndGet(i -> ++i) + "초가 지났습니다");
+    }).build());
     apiThread.start(); // 쓰레드 시작
 
     try {
