@@ -4,11 +4,11 @@ import com.goldenmine.threadapi.unit.FpsTimeUnit;
 
 public class TestThread {
   public static void main(String[] args) {
-    //new APIThread(����, ����);
-    //new APIMultiThread(����, ����, �������);
+    //new ApiSingleThread(단위, 숫자);
+    //new ApiMultiThread(단위, 숫자, 쓰레드수);
 
 
-    ApiSingleThread t = new ApiSingleThread(FpsTimeUnit.SECOND, 1) {
+    ApiThread apiThread = new ApiSingleThread(FpsTimeUnit.SECOND, 1) {
       long first = -1;
 
       int time;
@@ -54,13 +54,13 @@ public class TestThread {
 
       }
     };
-    t.start(); // 쓰레드 시작
+    apiThread.start(); // 쓰레드 시작
 
     try {
       Thread.sleep(5000L);
-      t.pause(); // 5초후 쓰레드 일시정지
+      apiThread.pause(); // 5초후 쓰레드 일시정지
       Thread.sleep(3000L);
-      t.resume(); // 8초후 쓰레드 재개
+      apiThread.resume(); // 8초후 쓰레드 재개
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
