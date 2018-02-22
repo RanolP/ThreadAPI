@@ -1,120 +1,112 @@
-package com.GoldenMine.Thread.ThreadAPI;
+package com.goldenmine.threadapi;
 
-import com.GoldenMine.Thread.ThreadAPI.Unit.TimeUnitFactory;
+import com.goldenmine.threadapi.unit.FpsTimeUnit;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class APIMultiThread implements APIThreadable {
-    private List<APIThread> threads = new ArrayList<APIThread>();
+public abstract class ApiMultiThread implements ApiThread {
+  private List<ApiSingleThread> threads = new ArrayList<>();
 
-    public APIMultiThread(TimeUnitFactory factory, double unit, int time) {
-        this(factory.convert(unit), time);
-    }
+  public ApiMultiThread(FpsTimeUnit factory, double unit, int time) {
+    this(factory.convert(unit), time);
+  }
 
-    public APIMultiThread(final double fps, final int time) {
-        /*create threads*/
-        for (int i = 0; i < time; i++) {
-
-            APIThread t = new APIThread(fps, (int) Math.round(fps / time * 1000 * i)) {
-                public void onThreadExecute() throws InterruptedException {
-                    process();
-                }
-
-                @Override
-                public void onKeepUp() {
-                    processKeepup();
-                }
-
-                @Override
-                public void onInterrupt() {
-                    processInterrupt();
-                }
-
-                @Override
-                public void onStart() {
-                    
-                }
-
-                @Override
-                public void onPause() {
-                    
-                }
-
-                @Override
-                public void onResume() {
-                    
-                }
-
-                @Override
-                public void onStop() {
-                    
-                }
-            };
-            threads.add(t);
-        }
-    }
-
-    @Override
-    public void APIPause() {
-        processPause();
-        
-        for (int i = 0; i < threads.size(); i++) {
-            threads.get(i).APIPause();
-        }
-    }
-
-    @Override
-    public void APIResume() {
-        processResume();
-        for (int i = 0; i < threads.size(); i++) {
-            threads.get(i).APIResume();
+  public ApiMultiThread(final double fps, final int time) {
+    // Create threads
+    for (int i = 0; i < time; i++) {
+      ApiSingleThread t = new ApiSingleThread(fps, (int) Math.round(fps / time * 1000 * i)) {
+        public void onThreadExecute() throws InterruptedException {
+          process();
         }
 
-    }
-
-    @Override
-    public void APIStop() {
-        processStop();
-        for (int i = 0; i < threads.size(); i++) {
-            threads.get(i).APIStop();
+        @Override
+        public void onKeepUp() {
+          processKeepup();
         }
-    }
 
-    public void start() {
-        processStart();
-        
-        for (int i = 0; i < threads.size(); i++) {
-            threads.get(i).start();
+        @Override
+        public void onInterrupt() {
+          processInterrupt();
         }
-    }
 
-    private void process() throws InterruptedException {
-        onThreadExecute();
-    }
+        @Override
+        public void onStart() {
+        }
 
-    private void processKeepup() {
-        onKeepUp();
-    }
+        @Override
+        public void onPause() {
+        }
 
-    private void processInterrupt() {
-        onInterrupt();
-    }
+        @Override
+        public void onResume() {
+        }
 
-    private void processStart() {
-        onStart();
+        @Override
+        public void onStop() {
+        }
+      };
+      threads.add(t);
     }
+  }
 
-    private void processPause() {
-        onPause();
+  @Override
+  public void pause() {
+    processPause();
+    for (ApiSingleThread thread : threads) {
+      thread.pause();
     }
+  }
 
-    private void processResume() {
-        onResume();
+  @Override
+  public void resume() {
+    processResume();
+    for (ApiSingleThread thread : threads) {
+      thread.resume();
     }
+  }
 
-    private void processStop() {
-        onStop();
+  @Override
+  public void stop() {
+    processStop();
+    for (ApiSingleThread thread : threads) {
+      thread.stop();
     }
+  }
 
+  @Override
+  public void start() {
+    processStart();
+    for (ApiSingleThread thread : threads) {
+      thread.start();
+    }
+  }
+
+  private void process() throws InterruptedException {
+    onThreadExecute();
+  }
+
+  private void processKeepup() {
+    onKeepUp();
+  }
+
+  private void processInterrupt() {
+    onInterrupt();
+  }
+
+  private void processStart() {
+    onStart();
+  }
+
+  private void processPause() {
+    onPause();
+  }
+
+  private void processResume() {
+    onResume();
+  }
+
+  private void processStop() {
+    onStop();
+  }
 }

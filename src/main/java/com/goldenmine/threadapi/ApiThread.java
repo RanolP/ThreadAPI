@@ -1,6 +1,6 @@
 package com.goldenmine.threadapi;
 
-public interface APIThreadable {
+public interface ApiThread {
   void onThreadExecute() throws InterruptedException;
 
   void onKeepUp();
@@ -15,24 +15,11 @@ public interface APIThreadable {
 
   void onStop();
 
-  @Deprecated
-  default void APIPause() {
-    pause();
-  }
-
   void pause();
-
-  @Deprecated
-  default void APIResume() {
-    resume();
-  }
 
   void resume();
 
-  @Deprecated
-  default void APIStop() {
-    stop();
-  }
-
   void stop();
+
+  void start();
 }

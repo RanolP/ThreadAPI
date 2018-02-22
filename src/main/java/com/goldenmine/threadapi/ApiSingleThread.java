@@ -3,7 +3,7 @@ package com.goldenmine.threadapi;
 
 import com.goldenmine.threadapi.unit.FpsTimeUnit;
 
-public abstract class APIThread implements APIThreadable {
+public abstract class ApiSingleThread implements ApiThread {
   private double fps;
   private boolean stop = false;
   private boolean paused = false;
@@ -14,23 +14,24 @@ public abstract class APIThread implements APIThreadable {
 
   private int firstremain;
 
-  public APIThread(FpsTimeUnit factory, double unit) {
+  public ApiSingleThread(FpsTimeUnit factory, double unit) {
     this(factory, unit, 0);
   }
 
-  APIThread(FpsTimeUnit factory, double unit, int firstremain) {
+  ApiSingleThread(FpsTimeUnit factory, double unit, int firstremain) {
     this(factory.convert(unit), firstremain);
   }
 
-  public APIThread(double fps) {
+  public ApiSingleThread(double fps) {
     this.fps = fps;
   }
 
-  APIThread(double fps, int firstremain) {
+  ApiSingleThread(double fps, int firstremain) {
     this(fps);
     this.firstremain = firstremain;
   }
 
+  @Override
   public void start() {
     thread.start();
   }
