@@ -1,73 +1,71 @@
-package com.GoldenMine.Thread;
+package com.goldenmine.threadapi;
 
-import com.GoldenMine.Thread.ThreadAPI.APIMultiThread;
-import com.GoldenMine.Thread.ThreadAPI.APIThread;
-import com.GoldenMine.Thread.ThreadAPI.Unit.TimeUnitFactory;
+import com.goldenmine.threadapi.unit.FpsTimeUnit;
 
 public class TestThread {
-    public static void main(String[] args) {
-        //new APIThread(´ÜÀ§, ¼ıÀÚ);
-        //new APIMultiThread(´ÜÀ§, ¼ıÀÚ, ¾²·¹µå¼ö);
+  public static void main(String[] args) {
+    //new APIThread(ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½);
+    //new APIMultiThread(ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½);
 
 
-        APIThread t = new APIThread(TimeUnitFactory.SECOND, 1) {
-            long first = -1;
+    ApiSingleThread t = new ApiSingleThread(FpsTimeUnit.SECOND, 1) {
+      long first = -1;
 
-            int time;
+      int time;
 
-            @Override
-            public void onThreadExecute() throws InterruptedException {
-                    Thread.sleep(10);
-                    if (first == -1) {
-                        first = System.currentTimeMillis();
-                    }
-                    //System.out.println(System.currentTimeMillis() - first);
-
-                    System.out.println(++time + "ÃÊ°¡ Áö³µ½À´Ï´Ù");
-            }
-
-            @Override
-            public void onKeepUp() {
-
-            }
-
-            @Override
-            public void onInterrupt() {
-
-            }
-
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onPause() {
-
-            }
-
-            @Override
-            public void onResume() {
-
-            }
-
-            @Override
-            public void onStop() {
-
-            }
-        };
-        t.start(); // ¾²·¹µå ½ÃÀÛ
-
-        try {
-            Thread.sleep(5000L);
-            t.APIPause(); // 5ÃÊÈÄ ¾²·¹µå ÀÏ½ÃÁ¤Áö
-            Thread.sleep(3000L);
-            t.APIResume(); // 8ÃÊÈÄ ¾²·¹µå Àç°³
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+      @Override
+      public void onThreadExecute() throws InterruptedException {
+        Delay.sleep(10);
+        if (first == -1) {
+          first = System.currentTimeMillis();
         }
-        //System.out.println(System.currentTimeMillis() + ", " + System.nanoTime() + ", " + (System.nanoTime()-System.currentTimeMillis()*1000000));
-        //System.out.println(System.currentTimeMillis() + ", " + System.nanoTime());
+        //System.out.println(System.currentTimeMillis() - first);
+
+        System.out.println(++time + "ì´ˆê°€ ì§€ë‚¬ìŠµë‹ˆë‹¤");
+      }
+
+      @Override
+      public void onKeepUp() {
+
+      }
+
+      @Override
+      public void onInterrupt() {
+
+      }
+
+      @Override
+      public void onStart() {
+
+      }
+
+      @Override
+      public void onPause() {
+
+      }
+
+      @Override
+      public void onResume() {
+
+      }
+
+      @Override
+      public void onStop() {
+
+      }
+    };
+    t.start(); // ì“°ë ˆë“œ ì‹œì‘
+
+    try {
+      Thread.sleep(5000L);
+      t.pause(); // 5ì´ˆí›„ ì“°ë ˆë“œ ì¼ì‹œì •ì§€
+      Thread.sleep(3000L);
+      t.resume(); // 8ì´ˆí›„ ì“°ë ˆë“œ ì¬ê°œ
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    //System.out.println(System.currentTimeMillis() + ", " + System.nanoTime() + ", " + (System.nanoTime()-System.currentTimeMillis()*1000000));
+    //System.out.println(System.currentTimeMillis() + ", " + System.nanoTime());
         /*Scanner scan = new Scanner(System.in);
 
         System.out.print("input FPS: ");
@@ -90,5 +88,5 @@ public class TestThread {
 
             }
         };*/
-    }
+  }
 }
