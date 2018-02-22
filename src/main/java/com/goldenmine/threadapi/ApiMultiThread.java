@@ -8,14 +8,13 @@ import java.util.List;
 public abstract class ApiMultiThread implements ApiThread {
   private List<ApiSingleThread> threads = new ArrayList<>();
 
-  public ApiMultiThread(FpsTimeUnit factory, double unit, int time) {
-    this(factory.convert(unit), time);
+  public ApiMultiThread(FpsTimeUnit timeUnit, double time, int count) {
+    this(timeUnit.convert(time), count);
   }
 
-  public ApiMultiThread(final double fps, final int time) {
-    // Create threads
-    for (int i = 0; i < time; i++) {
-      ApiSingleThread t = new ApiSingleThread(fps, (int) Math.round(fps / time * 1000 * i)) {
+  public ApiMultiThread(final double fps, final int count) {
+    for (int i = 0; i < count; i++) {
+      ApiSingleThread t = new ApiSingleThread(fps, (int) Math.round(fps / count * 1000 * i)) {
         public void onThreadExecute() throws InterruptedException {
           process();
         }
