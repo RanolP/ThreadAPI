@@ -21,7 +21,7 @@ public abstract class ApiMultiThread implements ApiThread {
 
         @Override
         public void onKeepUp() {
-          processKeepup();
+          processKeepUp();
         }
 
         @Override
@@ -85,7 +85,7 @@ public abstract class ApiMultiThread implements ApiThread {
     onThreadExecute();
   }
 
-  private void processKeepup() {
+  private void processKeepUp() {
     onKeepUp();
   }
 
