@@ -3,32 +3,33 @@ package com.goldenmine.threadapi;
 
 import com.goldenmine.threadapi.unit.FpsTimeUnit;
 
-public abstract class ApiSingleThread implements ApiThread {
+public final class ApiSingleThread implements ApiThread {
   private double fps;
   private boolean stop = false;
   private boolean paused = false;
   private long start;
-  private Delay delay;
-  private final int keepup = -2000;
+  private final int keepUp = -2000;
   private final Thread thread = new Thread(this::run);
+  private final ApiThreadHandler handler;
 
-  private int firstremain;
+  private int firstRemain;
 
-  public ApiSingleThread(FpsTimeUnit factory, double unit) {
-    this(factory, unit, 0);
+  public ApiSingleThread(FpsTimeUnit factory, double unit, ApiThreadHandler handler) {
+    this(factory, unit, 0, handler);
   }
 
-  ApiSingleThread(FpsTimeUnit factory, double unit, int firstremain) {
-    this(factory.convert(unit), firstremain);
+  ApiSingleThread(FpsTimeUnit factory, double unit, int firstRemain, ApiThreadHandler handler) {
+    this(factory.convert(unit), firstRemain, handler);
   }
 
-  public ApiSingleThread(double fps) {
+  public ApiSingleThread(double fps, ApiThreadHandler handler) {
     this.fps = fps;
+    this.handler = handler;
   }
 
-  ApiSingleThread(double fps, int firstremain) {
-    this(fps);
-    this.firstremain = firstremain;
+  ApiSingleThread(double fps, int firstRemain, ApiThreadHandler handler) {
+    this(fps, handler);
+    this.firstRemain = firstRemain;
   }
 
   @Override
@@ -37,13 +38,13 @@ public abstract class ApiSingleThread implements ApiThread {
   }
 
   private void run() {
-    onStart();
+    handler.onStart();
 
-    delay = new Delay(fps);
-    start = System.currentTimeMillis() + firstremain;
+    Delay delay = new Delay(fps);
+    start = System.currentTimeMillis() + firstRemain;
 
     try {
-      Thread.sleep(firstremain);
+      Thread.sleep(firstRemain);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
@@ -54,20 +55,20 @@ public abstract class ApiSingleThread implements ApiThread {
           Thread.sleep(Integer.MAX_VALUE);
           continue;
         }
-        onThreadExecute();
+        handler.onThreadExecute();
 
         start = delay.autoCompute(start);
-        long cal = delay.keepUp(start, keepup);
+        long cal = delay.keepUp(start, keepUp);
 
         if (cal > 0) {
-          onKeepUp();
+          handler.onKeepUp();
           start += cal;
         }
       } catch (InterruptedException ex) {
-        onInterrupt();
+        handler.onInterrupt();
         try {
-          if (firstremain > 0) {
-            Thread.sleep(firstremain);
+          if (firstRemain > 0) {
+            Thread.sleep(firstRemain);
           }
         } catch (InterruptedException e) {
           e.printStackTrace();
@@ -78,22 +79,22 @@ public abstract class ApiSingleThread implements ApiThread {
 
   @Override
   public void stop() {
-    onStop();
+    handler.onStop();
     stop = true;
     thread.interrupt();
   }
 
   @Override
   public void resume() {
-    onResume();
-    start = System.currentTimeMillis() + firstremain;
+    handler.onResume();
+    start = System.currentTimeMillis() + firstRemain;
     paused = false;
     thread.interrupt();
   }
 
   @Override
   public void pause() {
-    onPause();
+    handler.onPause();
     paused = true;
     thread.interrupt();
   }

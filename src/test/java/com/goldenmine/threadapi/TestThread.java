@@ -4,11 +4,7 @@ import com.goldenmine.threadapi.unit.FpsTimeUnit;
 
 public class TestThread {
   public static void main(String[] args) {
-    //new ApiSingleThread(단위, 숫자);
-    //new ApiMultiThread(단위, 숫자, 쓰레드수);
-
-
-    ApiThread apiThread = new ApiSingleThread(FpsTimeUnit.SECOND, 1) {
+    ApiThread apiThread = new ApiSingleThread(FpsTimeUnit.SECOND, 1, new ApiThreadHandler() {
       long first = -1;
 
       int time;
@@ -53,7 +49,7 @@ public class TestThread {
       public void onStop() {
 
       }
-    };
+    });
     apiThread.start(); // 쓰레드 시작
 
     try {
@@ -71,7 +67,7 @@ public class TestThread {
         System.out.print("input FPS: ");
         int fps = scan.nextInt();
 
-        APIMultiThread mt = new APIMultiThread(fps, 4) {
+        APIMultiThread mt = new APIMultiThread(fps, 4, new ApiThreadHandler() {
             int i = 0;
             @Override
             public void onThreadExecute() {
@@ -87,6 +83,6 @@ public class TestThread {
             public void onInterrupt() {
 
             }
-        };*/
+        });*/
   }
 }

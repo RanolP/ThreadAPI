@@ -7,26 +7,28 @@ import java.util.List;
 
 public abstract class ApiMultiThread implements ApiThread {
   private List<ApiSingleThread> threads = new ArrayList<>();
+  private ApiThreadHandler handler;
 
-  public ApiMultiThread(FpsTimeUnit timeUnit, double time, int count) {
-    this(timeUnit.convert(time), count);
+  public ApiMultiThread(FpsTimeUnit timeUnit, double time, int count, ApiThreadHandler handler) {
+    this(timeUnit.convert(time), count, handler);
   }
 
-  public ApiMultiThread(final double fps, final int count) {
+  public ApiMultiThread(final double fps, final int count, ApiThreadHandler handler) {
+    this.handler = handler;
     for (int i = 0; i < count; i++) {
-      ApiSingleThread t = new ApiSingleThread(fps, (int) Math.round(fps / count * 1000 * i)) {
+      ApiSingleThread t = new ApiSingleThread(fps, (int) Math.round(fps / count * 1000 * i), new ApiThreadHandler() {
         public void onThreadExecute() throws InterruptedException {
-          ApiMultiThread.this.onThreadExecute();
+          handler.onThreadExecute();
         }
 
         @Override
         public void onKeepUp() {
-          ApiMultiThread.this.onKeepUp();
+          handler.onKeepUp();
         }
 
         @Override
         public void onInterrupt() {
-          ApiMultiThread.this.onInterrupt();
+          handler.onInterrupt();
         }
 
         @Override
@@ -44,14 +46,14 @@ public abstract class ApiMultiThread implements ApiThread {
         @Override
         public void onStop() {
         }
-      };
+      });
       threads.add(t);
     }
   }
 
   @Override
   public void pause() {
-    onPause();
+    handler.onPause();
     for (ApiSingleThread thread : threads) {
       thread.pause();
     }
@@ -59,7 +61,7 @@ public abstract class ApiMultiThread implements ApiThread {
 
   @Override
   public void resume() {
-    onResume();
+    handler.onResume();
     for (ApiSingleThread thread : threads) {
       thread.resume();
     }
@@ -67,7 +69,7 @@ public abstract class ApiMultiThread implements ApiThread {
 
   @Override
   public void stop() {
-    onStop();
+    handler.onStop();
     for (ApiSingleThread thread : threads) {
       thread.stop();
     }
@@ -75,7 +77,7 @@ public abstract class ApiMultiThread implements ApiThread {
 
   @Override
   public void start() {
-    onStart();
+    handler.onStart();
     for (ApiSingleThread thread : threads) {
       thread.start();
     }
