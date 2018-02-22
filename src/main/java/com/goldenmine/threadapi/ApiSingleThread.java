@@ -14,12 +14,8 @@ public final class ApiSingleThread implements ApiThread {
 
   private int firstRemain;
 
-  public ApiSingleThread(FpsTimeUnit factory, double unit, ApiThreadHandler handler) {
-    this(factory, unit, 0, handler);
-  }
-
-  ApiSingleThread(FpsTimeUnit factory, double unit, int firstRemain, ApiThreadHandler handler) {
-    this(factory.convert(unit), firstRemain, handler);
+  public ApiSingleThread(FpsTimeUnit unit, double time, ApiThreadHandler handler) {
+    this(unit.convert(time), 0, handler);
   }
 
   public ApiSingleThread(double fps, ApiThreadHandler handler) {
