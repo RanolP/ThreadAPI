@@ -1,4 +1,4 @@
-package com.goldenmine.threadapi;
+package com.goldenmine.threadapi.handler;
 
 public interface ApiThreadHandler {
   void onThreadExecute() throws InterruptedException;
