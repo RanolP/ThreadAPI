@@ -5,7 +5,7 @@ import com.goldenmine.threadapi.unit.FpsTimeUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ApiMultiThread implements ApiThread {
+public final class ApiMultiThread implements ApiThread {
   private List<ApiSingleThread> threads = new ArrayList<>();
   private ApiThreadHandler handler;
 
